@@ -149,8 +149,18 @@ checkoutBtn.addEventListener("click", function(){
          const isOpen = checkRestaurantOpen();
 
          if(!isOpen){
-             alert("RESTAURANTE FECHADO NO MOMENTO!");
-             return;
+         Toastify({
+            text: "Ops restaurante estáfechado",
+            duration: 3000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "#ef4444",
+            },
+         }).showToast();
+         return;
          }
 
    if(cart.length === 0) return;
@@ -183,7 +193,7 @@ function checkRestaurantOpen(){
     const data = new Date();
     const hora = data.getHours();
 
-    return hora >= 19 && hora <22; 
+    return hora >= 19.30 && hora <22; 
 }
 
 const spanItem = document.getElementById("date-span")
