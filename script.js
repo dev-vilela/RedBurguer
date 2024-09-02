@@ -3,7 +3,7 @@ const cartBtn = document.getElementById("cart-btn")
 const cartModal = document.getElementById("cart-modal")
 const cartItemsContainer = document.getElementById("cart-items")
 const cartTotal = document.getElementById("cart-total")
-const checkBtn =document.getElementById("chekout-btn")
+const checkoutBtn =document.getElementById("checkout-btn")
 const closeModalBtn = document.getElementById("close-modal-btn")
 const cartCounter = document.getElementById("cart-count")
 const addressInput = document.getElementById("address")
@@ -131,3 +131,68 @@ function removeItemCart(name){
     }
 }
 
+//INPUT DO ENDEREÇO
+addressInput.addEventListener("input", function(event){
+    let inputValue = event.target.value;
+
+    if(inputValue !== ""){
+        addressInput.classList.remove("border-red-500");
+        addressWarn.classList.add("hidden")
+    }
+
+})
+
+//FINALIZAR PEDIDO
+
+checkoutBtn.addEventListener("click", function(){
+
+         const isOpen = checkRestaurantOpen();
+
+         if(!isOpen){
+             alert("RESTAURANTE FECHADO NO MOMENTO!");
+             return;
+         }
+
+   if(cart.length === 0) return;
+   
+   if(addressInput.value === ""){
+    addressWarn.classList.remove("hidden")
+    addressInput.classList.add("border-red-500")
+    return;
+   }
+
+   //ENVIAR O PEDIDO PARA API WHATS
+   const cartItems = cart.map((item) =>{
+    return(
+        `${item.name} Quantidade: (${item.quantity}) Preço: R$${item.price} | `
+    )
+   }).join("")
+
+   const message = encodeURIComponent(cartItems)
+   const phone = "61995700392"
+
+   window.open(`https://wa.me/${phone}?text=${message} Endereço: ${addressInput.value}`, "_blank")
+
+   cart.length = 0;
+   updateCartModal();
+   
+})
+
+//FUNÇÃO VERIFICAR HORARIO
+function checkRestaurantOpen(){
+    const data = new Date();
+    const hora = data.getHours();
+
+    return hora >= 19 && hora <22; 
+}
+
+const spanItem = document.getElementById("date-span")
+const isOpen = checkRestaurantOpen();
+
+if(isOpen){
+    spanItem.classList,remove("bg-red-500");
+    spanItem.classList.add("bg-green-600");
+}else{
+    spanItem.classList.remove("bg-green-600");
+    spanItem.classList.add("bg-red-500")
+}
